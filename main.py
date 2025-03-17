@@ -16,6 +16,17 @@ if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
 
+
+
+@app.get("/")
+def home():
+    return {"message": "Welcome to the Web Scraper API"}
+
+@app.post("/scrape")
+def scrape_website():
+    return {"message": "Scraping ishladi!"}
+
+
     
 # Templates sozlamalari
 templates = Jinja2Templates(directory="templates")
