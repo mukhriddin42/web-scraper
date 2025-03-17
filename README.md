@@ -1,0 +1,1 @@
+salom sayt buyerda: 
