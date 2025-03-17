@@ -11,6 +11,12 @@ app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
+
+    
 # Templates sozlamalari
 templates = Jinja2Templates(directory="templates")
 
@@ -55,3 +61,6 @@ def download_csv():
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="CSV fayl topilmadi")
     return FileResponse(file_path, filename="scraped_data.csv", media_type="text/csv")
+
+
+
