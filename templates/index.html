@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="uz">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="{{ url_for('static', path='output.css') }}" rel="stylesheet">
+        <link href="/static/output.css" rel="stylesheet">
+        <title>Web Scraper</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body class="bg-gray-100 flex items-center justify-center h-screen">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h1 class="text-2xl font-bold mb-4 text-center">Web Scraper</h1>
+
+            <input id="urlInput" type="text" placeholder="Sayt linkini kiriting"
+                class="border border-gray-300 p-2 rounded w-full mb-4">
+
+            <button onclick="scrapeWebsite()"
+                class="bg-blue-500 text-white px-4 py-2 rounded w-full">
+                Ma'lumotni yig'ish
+            </button>
+
+            <p id="resultMessage"
+                class="text-green-600 mt-3 text-center hidden"></p>
+
+            <a id="downloadLink"
+                class="hidden text-blue-500 mt-3 text-center block"
+                download>CSV-ni yuklab olish</a>
+        </div>
+
+        <script>
+    async function scrapeWebsite() {
+    let url = document.getElementById("urlInput").value;
+    let resultMessage = document.getElementById("resultMessage");
+    let downloadLink = document.getElementById("downloadLink");
+
+    if (!url) {
+        alert("Iltimos, sayt linkini kiriting!");
+        return;
+    }
+
+    resultMessage.textContent = "⏳ Yuklanmoqda...";
+    resultMessage.classList.remove("hidden", "text-green-600");
+    resultMessage.classList.add("text-gray-600");
+
+    try {
+        let response = await fetch("/scrape", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ url: url })
+        });
+
+        if (!response.ok) {
+            throw new Error(`Xatolik: ${response.status} - ${response.statusText}`);
+        }
+
+        let data = await response.json();
+
+        resultMessage.textContent = "✅ Ma'lumot muvaffaqiyatli yig‘ildi!";
+        resultMessage.classList.remove("text-gray-600");
+        resultMessage.classList.add("text-green-600");
+
+        downloadLink.href = "/download";
+        downloadLink.classList.remove("hidden");
+        downloadLink.textContent = "CSV-ni yuklab olish";
+        
+    } catch (error) {
+        resultMessage.textContent = "❌ Xatolik: " + error.message;
+        resultMessage.classList.remove("text-gray-600");
+        resultMessage.classList.add("text-red-600");
+    }
+}
+
+    </script>
+
+    </body>
+</html>
