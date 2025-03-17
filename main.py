@@ -2,21 +2,15 @@ from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-import requests
 from bs4 import BeautifulSoup
+
+import requests
+import uvicorn
 import csv
 import os
 
+
 app = FastAPI()
-
-app.mount("/static", StaticFiles(directory="static"), name="static")
-
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
-
-
 
 @app.get("/")
 def home():
@@ -26,8 +20,19 @@ def home():
 def scrape_website():
     return {"message": "Scraping ishladi!"}
 
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=8000)
 
-    
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+
+
+
+
+
+
+
+
 # Templates sozlamalari
 templates = Jinja2Templates(directory="templates")
 
